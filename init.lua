@@ -1,4 +1,4 @@
-uart.setup(0,9600,8,0,1) --establishes communciation with the LoRa module
+uart.setup(0,115200,8,0,1) --establishes communciation with the LoRa module
 tmr.delay(100)
 
 gpio.mode(4,gpio.OUTPUT)
@@ -17,7 +17,8 @@ thingspeakUpdate=20000
 soilThres=0
 intervals=0
 currentTime=0
-soilH201=0
+Temp1=0
+Temp2=0
 Bat1=0
 Bat2=0
 
@@ -47,7 +48,12 @@ ts1URL = "http://api.thingspeak.com/update.json?api_key="..controlProbe.."&field
 --wifi configuration
 
 wifi.setmode(wifi.STATION)
-wifi.sta.config(network,password)
+
+station_cfg={}
+station_cfg.ssid=network
+station_cfg.pwd=password
+station_cfg.save=true
+wifi.sta.config(station_cfg)
 
 if(wifi.sta.status()==5) then
     gpio.write(4,gpio.LOW)
@@ -87,7 +93,7 @@ callback = function(code, data)
      print(code,data)
    else
      print(code, data)
-     u=cjson.decode(data)
+     u=sjson.decode(data)
         thingspeakUpdate=nil
         systemClock=nil
         soilThres=nil
